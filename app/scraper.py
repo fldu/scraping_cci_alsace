@@ -21,6 +21,8 @@ db_password = getenv('MYSQL_PASSWORD')
 app = Celery('cci', broker="amqp://broker//", backend="rpc://broker//")
 db_connector = create_engine(f"mysql+mysqlconnector://{db_user}:{db_password}@db/{db_name}")
 
+queue = []
+
 @app.task
 def get_company(iterator):
     url = f"https://www.alsace-eurometropole.cci.fr/annuaire/annuaire-des-entreprises-alsace?page={iterator}"
@@ -102,8 +104,6 @@ def queue_check():
 ##Main Code here
 def main():
     header = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2"}
-
-    queue = []
 
     for i in range(0,8120):
         x = get_company.delay(i)
