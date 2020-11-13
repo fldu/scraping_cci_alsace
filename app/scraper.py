@@ -10,7 +10,7 @@ from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from .tasks import get_company
+from tasks import get_company
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
