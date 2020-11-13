@@ -89,7 +89,19 @@ def get_company(iterator):
                     company_CA = soup_company.find('div', {'class':'ca'}).find('div', {'class': 'field-items'}).get_text().replace('\n','')
                 except:
                     company_CA = "No info"
-            df_to_sql = df_to_sql.append(pd.Series([company_name, company_ape, ape_detail, company_street, zip_code, company_city, company_contact, company_size, company_phone, comapny_CA, company_link], index=df_to_sql.columns), ignore_index=True)
-            df_to_sql(con=db_connector, name="output", if_exists="append", index=False)
+            df_to_sql = df_to_sql.append({
+                'Company name': company_name, 
+                'Company APE': company_ape, 
+                'APE detail': ape_detail, 
+                'Company street': company_street, 
+                'Company ZIP': zip_code, 
+                'Company city': company_city, 
+                'Company contact': company_contact, 
+                'Company size': company_size, 
+                'Company Phone': company_phone, 
+                'CA': company_CA, 
+                'Company CCI link': company_link
+                }, ignore_index=True)
+            df_to_sql.to_sql(con=db_connector, name="output", if_exists="append", index=False)
         except Exception as e:
             print(f"error in code: {e}")
