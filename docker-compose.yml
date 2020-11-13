@@ -5,7 +5,7 @@ services:
   client:
     build:
       context: .
-      dockerfile: Dockerfile_worker
+      dockerfile: Dockerfile_client
     image: fldu/client
     links: 
       - broker

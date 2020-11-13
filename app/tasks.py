@@ -30,6 +30,7 @@ def get_company(iterator):
     soup = BeautifulSoup(r.text, 'lxml')
     if "Votre recherche n’a donné aucun résultat" in r.text:
         return False
+    df_to_sql = pd.DataFrame(columns=["Company name", "Company APE", "APE detail", "Company street", "Company ZIP", "Company city", 'Company contact', 'Company size', 'Company Phone', "CA", "Company CCI link"])
     for x in range(1,10):
         try:
             company_street = ""
@@ -88,7 +89,6 @@ def get_company(iterator):
                     company_CA = soup_company.find('div', {'class':'ca'}).find('div', {'class': 'field-items'}).get_text().replace('\n','')
                 except:
                     company_CA = "No info"
-            df_to_sql = pd.DataFrame(columns=["Company name", "Company APE", "APE detail", "Company street", "Company ZIP", "Company city", 'Company contact', 'Company size', 'Company Phone', "CA", "Company CCI link"])
             df_to_sql = df_to_sql.append(pd.Series([company_name, company_ape, ape_detail, company_street, zip_code, company_city, company_contact, company_size, company_phone, comapny_CA, company_link], index=df_to_sql.columns), ignore_index=True)
             df_to_sql(con=db_connector, name="output", if_exists="append", index=False)
         except Exception as e:

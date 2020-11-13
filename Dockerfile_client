@@ -15,4 +15,4 @@ COPY ./app /app
 
 RUN python -m unittest -v 
 VOLUME [ "/app/output" ]
-ENTRYPOINT python scaper.py
+ENTRYPOINT "sleep 60; python scaper.py"
