@@ -1,7 +1,7 @@
 FROM fedora:33
 LABEL fldu <fldu@fldu.fr>
 RUN dnf upgrade -y && \
-    dnf install -y python python-devel python-pip python3-celery python3-sqlalchemy commnity-mysql && \
+    dnf install -y python python-devel python-pip python3-celery python3-sqlalchemy community-mysql && \
     dnf clean all
 RUN mkdir -p /app/output
 COPY requirements.txt /app
