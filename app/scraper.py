@@ -26,6 +26,8 @@ def get_company(iterator):
     url = f"https://www.alsace-eurometropole.cci.fr/annuaire/annuaire-des-entreprises-alsace?page={iterator}"
     r = requests.get(url, headers=header)
     soup = BeautifulSoup(r.text, 'lxml')
+    if "Votre recherche n’a donné aucun résultat" in r.text:
+        return False
     for x in range(1,10):
         try:
             company_street = ""
@@ -104,10 +106,9 @@ def main():
 
     queue = []
 
-    while "Votre recherche n’a donné aucun résultat" not in r.text and r.status_code == 200:
+    for i in range(0,8120):
         x = get_company.delay(iterator)
         queue.append(x.id)
-        return_code = r.status_code
         print(iterator)
         iterator += 1
 
