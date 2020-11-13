@@ -86,12 +86,13 @@ def get_company(iterator):
                     company_CA = soup_company.find('div', {'class':'ca'}).find('div', {'class': 'field-items'}).get_text().replace('\n','')
                 except:
                     company_CA = "No info"
-        except:
-            pass
+            df_to_sql = pd.DataFrame(columns=["Company name", "Company APE", "APE detail", "Company street", "Company ZIP", "Company city", 'Company contact', 'Company size', 'Company Phone', "CA", "Company CCI link"])
+            df_to_sql = df_to_sql.append(pd.Series([company_name, company_ape, ape_detail, company_street, zip_code, company_city, company_contact, company_size, company_phone, comapny_CA, company_link], index=df.columns), ignore_index=True)
+            df.to_sql(con=db_connector, name="output", if_exists="append", index=False)
+        except Exception as e:
+            print(f"error in code: {e}")
 
-        df_to_sql = pd.DataFrame(columns=["Company name", "Company APE", "APE detail", "Company street", "Company ZIP", "Company city", 'Company contact', 'Company size', 'Company Phone', "CA", "Company CCI link"])
-        df_to_sql = df_to_sql.append(pd.Series([company_name, company_ape, ape_detail, company_street, zip_code, company_city, company_contact, company_size, company_phone, comapny_CA, company_link], index=df.columns), ignore_index=True)
-        df.to_sql(con=db_connector, name="output", if_exists="append", index=False)
+        
 
 def queue_check():
     for message in queue:
@@ -101,23 +102,18 @@ def queue_check():
 ##Main Code here
 def main():
     header = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2"}
-    iterator = 0
-    r = requests.get("https://www.alsace-eurometropole.cci.fr/annuaire/annuaire-des-entreprises-alsace?page=0", headers=header)
 
     queue = []
 
     for i in range(0,8120):
-        x = get_company.delay(iterator)
+        x = get_company.delay(i)
         queue.append(x.id)
-        print(iterator)
-        iterator += 1
+        print(i)
 
-    avoid_loop = 0
-    while len(queue) > 0 and avoid_loop < 4:
+    while len(queue) > 0:
         queue_check()
         time.sleep(10)
         print("Waiting 10s to empty queue")
-        avoid_loop += 1
 
     df = pd.read_sql(f"SELECT * FROM output", con=db_connector)
     df.to_excel('./output/output.xlsx', index=False)
