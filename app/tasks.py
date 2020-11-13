@@ -102,6 +102,6 @@ def get_company(iterator):
                 'CA': company_CA, 
                 'Company CCI link': company_link
                 }, ignore_index=True)
-            df_to_sql.to_sql(con=db_connector, name="output", if_exists="append", index=False)
         except Exception as e:
             print(f"error in code: {e}")
+    df_to_sql.to_sql(con=db_connector, name="output", if_exists="append", index=False)
