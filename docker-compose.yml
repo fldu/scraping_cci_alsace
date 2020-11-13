@@ -1,0 +1,35 @@
+version: "3.0"
+
+services: 
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile_worker
+    image: fldu/client
+    links: 
+      - broker
+      - db
+    
+  broker:
+    image: rabbitmq
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile_worker
+    image: fldu/workers
+    links:
+      - broker
+      - db
+    deploy:
+      replicas: 4
+
+  db:
+    image: mariadb
+    env_file: .env
+    volumes:
+      - db:/var/lib/mysql
+
+volumes: 
+  db
