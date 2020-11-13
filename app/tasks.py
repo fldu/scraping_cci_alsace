@@ -17,12 +17,13 @@ db_name = getenv('MYSQL_DATABASE')
 db_user = getenv('MYSQL_USER')
 db_password = getenv('MYSQL_PASSWORD')
 
-app = Celery('cci', broker="amqp://broker//", backend="rpc://broker//")
+app = Celery('cci', broker="amqp://broker//", backend="rpc://logging//")
 db_connector = create_engine(f"mysql+mysqlconnector://{db_user}:{db_password}@db/{db_name}")
 
 
 @app.task
 def get_company(iterator):
+    header = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2"}
     url = f"https://www.alsace-eurometropole.cci.fr/annuaire/annuaire-des-entreprises-alsace?page={iterator}"
     r = requests.get(url, headers=header)
     soup = BeautifulSoup(r.text, 'lxml')

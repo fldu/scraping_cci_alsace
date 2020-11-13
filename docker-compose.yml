@@ -10,8 +10,12 @@ services:
     links: 
       - broker
       - db
+      - logging
     
   broker:
+    image: rabbitmq
+
+  logging:
     image: rabbitmq
 
   worker:
@@ -22,6 +26,7 @@ services:
     links:
       - broker
       - db
+      - logging
     deploy:
       replicas: 4
 
