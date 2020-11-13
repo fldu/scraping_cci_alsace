@@ -10,6 +10,16 @@ from os import getenv
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+db_name = getenv('MYSQL_DATABASE')
+db_user = getenv('MYSQL_USER')
+db_password = getenv('MYSQL_PASSWORD')
+
+app = Celery('cci', broker="amqp://broker//", backend="amqp://broker//")
+db_connector = create_engine(f"mysql+mysqldb://{db_user}:{db_password}@db/{db_name}")
+
 @app.task
 def get_company(iterator):
     url = f"https://www.alsace-eurometropole.cci.fr/annuaire/annuaire-des-entreprises-alsace?page={iterator}"
@@ -110,15 +120,4 @@ def main():
     df = pd.read_sql(f"SELECT * FROM output", con=db_connector)
     df.to_excel('./output/output.xlsx', index=False)
 
-if __name__ == "__main__":
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
-
-    db_name = getenv('MYSQL_DATABASE')
-    db_user = getenv('MYSQL_USER')
-    db_password = getenv('MYSQL_PASSWORD')
-
-    app = Celery('cci', broker="amqp://broker//", backend="amqp://broker//")
-    db_connector = create_engine(f"mysql+mysqldb://{db_user}:{db_password}@db/{db_name}")
-
-    main()
+main()
