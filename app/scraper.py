@@ -5,6 +5,7 @@ import lxml
 from random import randint
 from time import sleep
 from celery import Celery
+import celery
 from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
