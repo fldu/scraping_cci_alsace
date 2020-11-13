@@ -18,7 +18,7 @@ db_user = getenv('MYSQL_USER')
 db_password = getenv('MYSQL_PASSWORD')
 
 app = Celery('cci', broker="amqp://broker//", backend="amqp://broker//")
-db_connector = create_engine(f"mysql+mysqldb://{db_user}:{db_password}@db/{db_name}")
+db_connector = create_engine(f"mysql+mysqlconnector://{db_user}:{db_password}@db/{db_name}")
 
 @app.task
 def get_company(iterator):

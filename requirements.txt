@@ -4,3 +4,4 @@ pandas
 requests
 openpyxl
 python-dotenv
+mysql-connector-python
