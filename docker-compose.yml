@@ -5,13 +5,17 @@ services:
   client:
     build:
       context: .
-      dockerfile: Dockerfile_worker
+      dockerfile: Dockerfile_client
     image: fldu/client
     links: 
       - broker
       - db
+      - logging
     
   broker:
+    image: rabbitmq
+
+  logging:
     image: rabbitmq
 
   worker:
@@ -22,6 +26,7 @@ services:
     links:
       - broker
       - db
+      - logging
     deploy:
       replicas: 4
 

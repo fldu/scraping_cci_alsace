@@ -12,7 +12,8 @@ USER python
 RUN pip install -r /app/requirements.txt --user
 
 COPY ./app /app
+COPY ./entrypoint.sh /app/entrypoint.sh
 
 RUN python -m unittest -v 
 VOLUME [ "/app/output" ]
-ENTRYPOINT python scaper.py
+ENTRYPOINT bash entrypoint.sh
