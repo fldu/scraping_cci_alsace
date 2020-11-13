@@ -15,4 +15,4 @@ COPY ./app /app
 
 RUN python -m unittest -v 
 VOLUME [ "/app/output" ]
-ENTRYPOINT celery -A scraper tasks --loglevel=INFO
+ENTRYPOINT celery -A tasks --loglevel=INFO
